@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "aoe4-matchmaking"
+version = "0.1.0"
+description = ""
+authors = ["Sukhrob Ilyosbekov <SuxrobGM@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "~3.12"
+pandas = "^2.2.2"
+seaborn = "^0.13.2"
+scikit-learn = "^1.5.2"
+numpy = "^2.1.2"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+notebook = "^7.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
