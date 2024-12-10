@@ -56,7 +56,7 @@ The project will proceed through the following steps:
 
 2. **Exploratory Data Analysis (EDA):** Perform EDA to understand the distributions, relationships, and patterns within the data. Visualizations will aid in identifying trends and informing feature engineering.
 
-3. **Feature Engineering:** Develop new features that may enhance model performance, such as MMR differences, civilization matchup indicators, playstyle metrics, and latency estimates based on server locations.
+3. **Feature Engineering:** Develop new features that may enhance model performance, such as win rate, MMR differences, civilization matchup indicators.
 
 4. **Clustering Analysis:** Apply clustering algorithms to segment players into groups based on selected features. Evaluate the clusters for coherence and interpretability, and refine as necessary.
 
