@@ -16,3 +16,20 @@ def get_data_path(relative_path: str) -> str:
     """
     joined_path = os.path.join(os.path.dirname(__file__), "../../dataset", relative_path)
     return os.path.abspath(joined_path)
+
+def get_model_path(relative_path: str) -> str:
+    """
+    Get the absolute path to a file in the `models` directory.
+
+    Args:
+        relative_path: The path to the file relative to the `models` directory including the file name.
+
+    Returns:
+        The full path to the file in the `models` directory.
+
+    Examples:
+        >>> get_model_path("assignment1/model.pkl")
+        'C:/Users/username/assignments/models/assignment1/model.pkl'
+    """
+    joined_path = os.path.join(os.path.dirname(__file__), "../../models", relative_path)
+    return os.path.abspath(joined_path)
