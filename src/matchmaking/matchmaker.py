@@ -9,7 +9,7 @@ class Matchmaker:
     classifier_model: XGBClassifier
     players_df: pd.DataFrame
     is_model_loaded = False
-    players_queue: list[str]
+    players_queue: list[int]
     logger = logging.getLogger()
 
     def load_models(self) -> None:
@@ -26,7 +26,7 @@ class Matchmaker:
         self.logger.info("Models loaded successfully")
         self.logger.info(f"Players data shape: {self.players_df.shape}")
 
-    def add_player_to_queue(self, player_id: str) -> bool:
+    def add_player_to_queue(self, player_id: int) -> bool:
         """
         Add a player to the queue.
         Args:
@@ -45,6 +45,22 @@ class Matchmaker:
         self.players_queue.append(player_id)
         self.logger.info(f"Player {player_id} added to queue")
         return True
+    
+    def remove_player_from_queue(self, player_id: int) -> bool:
+        """
+        Remove a player from the queue.
+        Args:
+            player_id: The profile ID of the player to remove from the queue.
+        Returns:
+            True if the player was successfully removed from the queue, False otherwise.
+        """
+        try:
+            self.players_queue.remove(player_id)
+            self.logger.info(f"Player {player_id} removed from queue")
+            return True
+        except ValueError:
+            self.logger.error(f"Player {player_id} not found in the queue")
+            return False
 
     def predict_match_outcome(self, player_id_A: int, player_id_B: int) -> float:
         """
@@ -72,7 +88,7 @@ class Matchmaker:
         self.logger.info(f"Predicted probability that {pA["name"]} (ID: {player_id_A}) wins against {pB["name"]} (ID: {player_id_B}): {prob}")
         return prob
     
-    def find_match_for_player(self, profile_id: str, target=0.5, tolerance=0.1) -> tuple:
+    def find_match_for_player(self, profile_id: int, target=0.5, tolerance=0.1) -> dict:
         """
         Find a match for a player in the queue.
         Args:
@@ -104,9 +120,9 @@ class Matchmaker:
         # Attempt to find the best partner
         best_partner: dict | None = None
         best_diff = float("inf")
+        last_prob: float | None = None # Store the last probability for logging
 
-        for opponent in cluster_candidates.iterrows():
-            opponent: pd.Series
+        for _, opponent in cluster_candidates.iterrows():
             self.logger.info(f"Trying to match '{player["name"]}' (ID: {profile_id}) with '{opponent["name"]}' (ID: {opponent["profile_id"]})")
             prob = self.predict_match_outcome(profile_id, opponent["profile_id"])
             diff = abs(prob - target)
@@ -114,12 +130,24 @@ class Matchmaker:
             if diff < best_diff and diff <= tolerance:
                 best_diff = diff
                 best_partner = opponent.to_dict()
+                last_prob = prob
         
         if best_partner is not None:
-            return best_partner
-        
-        # If no perfect match found, use ELO rating to find an opponent
-        return self._find_opponent_using_elo(profile_id)
+            self.logger.info(f"Matched '{player["name"]}' (ID: {profile_id}) with '{best_partner["name"]}' (ID: {best_partner["profile_id"]}) using cluster")
+            self.logger.info(f"The probability that {player["name"]} wins against {best_partner["name"]} is {last_prob}")
+        else:
+            # If no perfect match found, use ELO rating to find an opponent
+            self.logger.info(f"No perfect match found for '{player["name"]}' (ID: {profile_id}). Trying to find an opponent using ELO rating")
+            best_partner = self._find_opponent_using_elo(profile_id)
+
+        # Remove matched players from the queue
+        self.remove_player_from_queue(profile_id)
+        self.remove_player_from_queue(best_partner["profile_id"])
+        return {
+            "player_1": player.to_dict(),
+            "player_2": best_partner,
+            "player_1_win_prob": last_prob
+        }
             
     def queue_length(self) -> int:
         """
@@ -127,7 +155,7 @@ class Matchmaker:
         """
         return len(self.players_queue)
     
-    def _find_opponent_using_elo(self, player_id: str) -> dict:
+    def _find_opponent_using_elo(self, player_id: int) -> dict:
         """
         Find an opponent for a player with the closest ELO rating.
         Args:
@@ -135,7 +163,6 @@ class Matchmaker:
         Returns:
             The profile ID of the player to match with.
         """
-
         # Retrieve player's ELO rating
         player: pd.Series = self.players_df.loc[self.players_df["profile_id"] == player_id].squeeze()
         player_elo: float = player["rating_A"]
