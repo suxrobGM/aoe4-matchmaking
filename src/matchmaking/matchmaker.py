@@ -19,7 +19,7 @@ class Matchmaker:
         if self.is_model_loaded:
             return
 
-        self.classifier_model = load(get_model_path("classifier_model.joblib"))
+        self.classifier_model = load(get_model_path("classifier_model.xgb"))
         self.players_df = pd.read_csv(get_model_path("clustered_players.csv"))
         self.players_queue = self.players_df["profile_id"].tolist() # TODO: Initialize queue with all players, for real scenario this should be empty
         self.is_model_loaded = True
@@ -196,21 +196,32 @@ class Matchmaker:
         rank_level_encoded_B = pB["rank_level_encoded"]
         avg_mmr_diff_10_A = pA["avg_mmr_diff_10"]
         avg_mmr_diff_10_B = pB["avg_mmr_diff_10"]
+        avg_mmr_diff_25_A = pA["avg_mmr_diff_25"]
+        avg_mmr_diff_25_B = pB["avg_mmr_diff_25"]
         avg_mmr_diff_50_A = pA["avg_mmr_diff_50"]
         avg_mmr_diff_50_B = pB["avg_mmr_diff_50"]
+        avg_mmr_diff_75_A = pA["avg_mmr_diff_75"]
+        avg_mmr_diff_75_B = pB["avg_mmr_diff_75"]
+        avg_mmr_diff_100_A = pA["avg_mmr_diff_100"]
+        avg_mmr_diff_100_B = pB["avg_mmr_diff_100"]
         avg_mmr_A = pA["avg_mmr"]
         avg_mmr_B = pB["avg_mmr"]
         avg_opp_mmr_A = pA["avg_opp_mmr"]
         avg_opp_mmr_B = pB["avg_opp_mmr"]
         avg_game_length_A = pA["avg_game_length"]
         avg_game_length_B = pB["avg_game_length"]
+        input_type_encoded_A = pA["input_type_encoded"]
+        input_type_encode_B = pB["input_type_encoded"]
         
         # Return feature vector in the same order as training
         features = np.array([[
             rating_A, win_rate_A, games_count_A, wins_count_A, 
-            rank_level_encoded_A, avg_mmr_diff_10_A, avg_mmr_diff_50_A, avg_mmr_A, 
-            avg_opp_mmr_A, avg_game_length_A, rating_B, win_rate_B,
-            games_count_B, wins_count_B, rank_level_encoded_B, avg_mmr_diff_10_B, 
-            avg_mmr_diff_50_B, avg_mmr_B, avg_opp_mmr_B, avg_game_length_B
+            rank_level_encoded_A, avg_mmr_diff_10_A, avg_mmr_diff_25_A,
+            avg_mmr_diff_50_A, avg_mmr_diff_75_A, avg_mmr_diff_100_A, 
+            avg_mmr_A, avg_opp_mmr_A, avg_game_length_A, input_type_encoded_A,
+            rating_B, win_rate_B, games_count_B, wins_count_B, 
+            rank_level_encoded_B, avg_mmr_diff_10_B, avg_mmr_diff_25_B, 
+            avg_mmr_diff_50_B, avg_mmr_diff_75_B, avg_mmr_diff_100_B, 
+            avg_mmr_B, avg_opp_mmr_B, avg_game_length_B, input_type_encode_B
         ]])
         return features

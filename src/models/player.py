@@ -15,3 +15,4 @@ class PlayerDto(PydanticBaseModel):
     avg_game_length: float
     common_civ: str
     win_rate: float
+    input_type: str

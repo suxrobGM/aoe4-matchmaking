@@ -1,4 +1,3 @@
-
 import pandas as pd
 from core import get_model_path, PagedResult, PagedQuery
 from models import PlayerDto
@@ -21,22 +20,7 @@ class PlayerService:
         if player is None:
             return None
 
-        return PlayerDto(
-            profile_id=player["profile_id"],
-            name=player["name"],
-            rank=player["rank"],
-            rating=player["rating"],
-            games_count=player["games_count"],
-            wins_count=player["wins_count"],
-            last_game_at=player["last_game_at"],
-            rank_level=player["rank_level"],
-            country=player["country"],
-            avg_mmr=player["avg_mmr"],
-            avg_opp_mmr=player["avg_opp_mmr"],
-            avg_game_length=player["avg_game_length"],
-            common_civ=player["common_civ"],
-            win_rate=player["win_rate"]
-        )
+        return self._map_player_to_dto(player)
     
     def get_players(self, paged_query: PagedQuery) -> PagedResult[PlayerDto]:
         self.load_players() # Ensure data is loaded
@@ -58,22 +42,7 @@ class PlayerService:
         page_data = filtered_df.iloc[start:end]
 
         players = [
-            PlayerDto(
-                profile_id=player["profile_id"],
-                name=player["name"],
-                rank=player["rank"],
-                rating=player["rating"],
-                games_count=player["games_count"],
-                wins_count=player["wins_count"],
-                last_game_at=player["last_game_at"],
-                rank_level=player["rank_level"],
-                country=player["country"],
-                avg_mmr=player["avg_mmr"],
-                avg_opp_mmr=player["avg_opp_mmr"],
-                avg_game_length=player["avg_game_length"],
-                common_civ=player["common_civ"],
-                win_rate=player["win_rate"]
-            )
+            self._map_player_to_dto(player)
             for _, player in page_data.iterrows()
         ]
 
@@ -82,4 +51,23 @@ class PlayerService:
             page_index=page_index,
             page_size=paged_query.page_size,
             items_count=items_count
+        )
+    
+    def _map_player_to_dto(self, player: pd.Series) -> PlayerDto:
+        return PlayerDto(
+            profile_id=player["profile_id"],
+            name=player["name"],
+            rank=player["rank"],
+            rating=player["rating"],
+            games_count=player["games_count"],
+            wins_count=player["wins_count"],
+            last_game_at=player["last_game_at"],
+            rank_level=player["rank_level"],
+            country=player["country"],
+            avg_mmr=player["avg_mmr"],
+            avg_opp_mmr=player["avg_opp_mmr"],
+            avg_game_length=player["avg_game_length"],
+            common_civ=player["common_civ"],
+            win_rate=player["win_rate"],
+            input_type=player["input_type"]
         )
