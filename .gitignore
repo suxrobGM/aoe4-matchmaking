@@ -162,7 +162,7 @@ cython_debug/
 #.idea/
 
 # Ignore everything in the dataset directory
-dataset/*
+backend/dataset/*
 
 # Allow .gz files
-!dataset/*.gz
+!backend/dataset/*.gz
