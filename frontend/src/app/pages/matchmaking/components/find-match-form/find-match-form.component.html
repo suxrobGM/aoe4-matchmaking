@@ -1,0 +1,52 @@
+<p-card header="Find match">
+  <form
+    [formGroup]="form"
+    class="d-flex flex-column gap-5 py-3"
+    (ngSubmit)="findMatch()"
+  >
+    <p-floatlabel>
+      <input
+        pInputText
+        id="playerId"
+        type="number"
+        formControlName="playerId"
+        autocomplete="off"
+      />
+      <label for="player1">Player ID</label>
+    </p-floatlabel>
+
+    <p-button type="submit" [disabled]="isLoading()">Find</p-button>
+  </form>
+
+  @if (pairPlayerData()) {
+    <span>Found match! Opponent Data:</span>
+    <ul>
+      <li>Profile ID: {{ pairPlayerData()?.player2?.profileId }}</li>
+      <li>Name: {{ pairPlayerData()?.player2?.name }}</li>
+      <li>Rank: {{ pairPlayerData()?.player2?.rank }}</li>
+      <li>Rating: {{ pairPlayerData()?.player2?.rating }}</li>
+      <li>Games Count: {{ pairPlayerData()?.player2?.gamesCount }}</li>
+      <li>Wins Count: {{ pairPlayerData()?.player2?.winsCount }}</li>
+      <li>Last Game: {{ pairPlayerData()?.player2?.lastGameAt | date }}</li>
+      <li>Rank Level: {{ pairPlayerData()?.player2?.rankLevel }}</li>
+      <li>Country: {{ pairPlayerData()?.player2?.country }}</li>
+      <li>
+        Average MMR:
+        {{ pairPlayerData()?.player2?.avgMmr | number: "1.0-0" }}
+      </li>
+      <li>
+        Average Opponent MMR:
+        {{ pairPlayerData()?.player2?.avgOppMmr | number: "1.0-0" }}
+      </li>
+      <li>Common Civ: {{ pairPlayerData()?.player1?.commonCiv }}</li>
+      <li>
+        Average Game Length:
+        {{ pairPlayerData()?.player2?.avgGameLength | number: "1.0-0" }}
+      </li>
+    </ul>
+    <p>
+      Probability of you winning:
+      {{ pairPlayerData()?.player1WinProb | percent }}
+    </p>
+  }
+</p-card>

@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from core.result import Result, ResultWithData
 from matchmaking import Matchmaker
 from models import PlayerIdDto, PredictMatchOutcomeDto, PairPlayersDto
+from models.player import PlayerDto
 
 matchmaking_router = APIRouter(prefix="/matchmaking", tags=["matchmaking"])
 router = matchmaking_router
@@ -47,7 +48,11 @@ def find_match(payload: PlayerIdDto) -> ResultWithData[PairPlayersDto]:
     match_data = matchmaker.find_match_for_player(payload.player_id)
     
     if match_data:
-        dto = PairPlayersDto(player_1=match_data["player_1"], player_2=match_data["player_2"], player_1_win_prob=match_data["player_1_win_prob"])
+        dto = PairPlayersDto(
+            player_1=PlayerDto.from_dict(match_data["player_1"]),
+            player_2=PlayerDto.from_dict(match_data["player_2"]),
+            player_1_win_prob=match_data["player_1_win_prob"]
+        )
         return ResultWithData.succeed(dto)
 
     return ResultWithData.fail("No match found")

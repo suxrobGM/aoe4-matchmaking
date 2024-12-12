@@ -1,0 +1,38 @@
+<p-card header="Predict match outcome">
+  <form
+    [formGroup]="form"
+    class="d-flex flex-column gap-5 py-3"
+    (ngSubmit)="predictMatchOutcome()"
+  >
+    <p-floatlabel>
+      <input
+        pInputText
+        id="player1"
+        type="number"
+        formControlName="player1"
+        autocomplete="off"
+      />
+      <label for="player1">Player 1</label>
+    </p-floatlabel>
+    <p-floatlabel>
+      <input
+        pInputText
+        id="player2"
+        type="number"
+        formControlName="player2"
+        autocomplete="off"
+      />
+      <label for="player1">Player 2</label>
+    </p-floatlabel>
+
+    <p-button type="submit" [disabled]="isLoading()">Predict</p-button>
+  </form>
+
+  @if (predictedMatchProb()) {
+    <p>
+      Predicted match outcome: Player 1 wins with
+      <span class="text-success">{{ predictedMatchProb() | percent }}</span>
+      probability
+    </p>
+  }
+</p-card>

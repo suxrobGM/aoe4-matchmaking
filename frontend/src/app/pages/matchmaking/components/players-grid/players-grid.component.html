@@ -1,0 +1,142 @@
+<p-card>
+  <p-table
+    [value]="players()"
+    responsiveLayout="scroll"
+    [lazy]="true"
+    [paginator]="true"
+    [showCurrentPageReport]="true"
+    (onLazyLoad)="load($event)"
+    [rows]="10"
+    [(first)]="first"
+    [totalRecords]="totalRecords()"
+    [loading]="isLoading()"
+    [rowsPerPageOptions]="[10, 25, 50, 100]"
+  >
+    <ng-template pTemplate="caption">
+      <div class="d-flex">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            placeholder="Search"
+            (input)="searchPlayer($event)"
+          />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="rank">
+          Rank
+          <p-sortIcon field="rank"></p-sortIcon>
+        </th>
+        <th pSortableColumn="profile_id">
+          Profile ID
+          <p-sortIcon field="profile_id"></p-sortIcon>
+        </th>
+        <th pSortableColumn="name">
+          Name
+          <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="rating">
+          Rating
+          <p-sortIcon field="rating"></p-sortIcon>
+        </th>
+        <th pSortableColumn="games_count">
+          Games Count
+          <p-sortIcon field="games_count"></p-sortIcon>
+        </th>
+        <th pSortableColumn="wins_count">
+          Wins Count
+          <p-sortIcon field="wins_count"></p-sortIcon>
+        </th>
+        <th pSortableColumn="last_game_at">
+          Last Game
+          <p-sortIcon field="last_game_at"></p-sortIcon>
+        </th>
+        <th pSortableColumn="rank_level">
+          Rank Level
+          <p-sortIcon field="rank_level"></p-sortIcon>
+        </th>
+        <th pSortableColumn="country">
+          country
+          <p-sortIcon field="country"></p-sortIcon>
+        </th>
+        <th pSortableColumn="avg_mmr">
+          Average MMR
+          <p-sortIcon field="avg_mmr"></p-sortIcon>
+        </th>
+        <th pSortableColumn="avg_opp_mmr">
+          Averate Opponent MMR
+          <p-sortIcon field="avg_opp_mmr"></p-sortIcon>
+        </th>
+        <th pSortableColumn="avg_game_length">
+          Average Game Length
+          <p-sortIcon field="avg_game_length"></p-sortIcon>
+        </th>
+        <th pSortableColumn="common_civ">
+          Common Civ
+          <p-sortIcon field="common_civ"></p-sortIcon>
+        </th>
+        <th pSortableColumn="win_rate">
+          Win Rate
+          <p-sortIcon field="win_rate"></p-sortIcon>
+        </th>
+        <th pSortableColumn="input_type">
+          Input Type
+          <p-sortIcon field="input_type"></p-sortIcon>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-player>
+      <tr>
+        <td>
+          {{ player.rank }}
+        </td>
+        <td>
+          {{ player.profileId }}
+        </td>
+        <td>
+          {{ player.name }}
+        </td>
+        <td>
+          {{ player.rating }}
+        </td>
+        <td>
+          {{ player.gamesCount }}
+        </td>
+        <td>
+          {{ player.winsCount }}
+        </td>
+        <td>
+          {{ formatDate(player.lastGameAt) | date: "shortDate" }}
+        </td>
+        <td>
+          {{ player.rankLevel }}
+        </td>
+        <td>
+          {{ player.country }}
+        </td>
+        <td>
+          {{ player.avgMmr | number: "1.0-0" }}
+        </td>
+        <td>
+          {{ player.avgOppMmr | number: "1.0-0" }}
+        </td>
+        <td>
+          {{ player.avgGameLength | number: "1.0-0" }}
+        </td>
+        <td>
+          {{ player.commonCiv }}
+        </td>
+        <td>
+          {{ player.winRate | percent }}
+        </td>
+        <td>
+          {{ player.inputType }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

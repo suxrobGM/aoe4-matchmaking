@@ -1,5 +1,4 @@
 import {Routes} from "@angular/router";
-import {uploadRoutes} from "@/pages/upload";
-import {playersRoute} from "@/pages/players";
+import {matchmakingRoutes} from "@/pages/matchmaking";
 
-export const routes: Routes = [...uploadRoutes, ...playersRoute];
+export const routes: Routes = [...matchmakingRoutes];

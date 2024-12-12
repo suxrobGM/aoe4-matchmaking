@@ -4,3 +4,4 @@ export * from "./paged-result.dto";
 export * from "./pair-players.dto";
 export * from "./player.dto";
 export * from "./predict-match-outcome.dto";
+export * from "./player-id.dto";

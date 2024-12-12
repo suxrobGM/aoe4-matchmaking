@@ -35,7 +35,9 @@ class PlayerService:
         page_index = paged_query.page - 1
 
         if paged_query.order_by:
-            filtered_df = filtered_df.sort_values(by=paged_query.order_by)
+            is_desc = paged_query.order_by.startswith("-")
+            order_by_property = paged_query.order_by[1:] if is_desc else paged_query.order_by
+            filtered_df = filtered_df.sort_values(by=order_by_property, ascending=not is_desc)
 
         start = page_index * paged_query.page_size
         end = start + paged_query.page_size

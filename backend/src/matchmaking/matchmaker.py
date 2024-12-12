@@ -139,6 +139,7 @@ class Matchmaker:
             # If no perfect match found, use ELO rating to find an opponent
             self.logger.info(f"No perfect match found for '{player["name"]}' (ID: {profile_id}). Trying to find an opponent using ELO rating")
             best_partner = self._find_opponent_using_elo(profile_id)
+            last_prob = self.predict_match_outcome(profile_id, best_partner["profile_id"])
 
         # Remove matched players from the queue
         self.remove_player_from_queue(profile_id)
@@ -165,13 +166,24 @@ class Matchmaker:
         """
         # Retrieve player's ELO rating
         player: pd.Series = self.players_df.loc[self.players_df["profile_id"] == player_id].squeeze()
-        player_elo: float = player["rating_A"]
+        player_elo: float = player["rating"]
 
         # Find the closest ELO rating to the player's ELO rating
         opponents = self.players_df.loc[self.players_df["profile_id"] != player_id]
-        closest_opponent = opponents.iloc[(opponents["rating_A"] - player_elo).abs().argsort()[:1]]
-        self.logger.info(f"Matched '{player["name"]}' (ID: {player_id}) with '{closest_opponent["name"].values[0]}' (ID: {closest_opponent["profile_id"].values[0]}) using ELO rating")
-        return closest_opponent.to_dict()
+        #closest_opponent = opponents.iloc[(opponents["rating"] - player_elo).abs().argsort()[:1]]
+        closest_opponent: pd.Series | None = None
+
+        for _, opponent in opponents.iterrows():
+            if opponent["profile_id"] in self.players_queue:
+                closest_opponent = opponent
+                break
+        
+        if closest_opponent is not None:
+            self.logger.info(f"Matched '{player["name"]}' (ID: {player_id}) with '{closest_opponent["name"]}' (ID: {closest_opponent["profile_id"]}) using ELO rating")
+            return closest_opponent.to_dict()
+    
+        self.logger.warning(f"No available opponents in the queue for player '{player["name"]}' (ID: {player_id})")
+        return {}
 
     def _get_match_features(self, pA: pd.Series, pB: pd.Series) -> np.ndarray:
         """
