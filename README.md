@@ -142,3 +142,8 @@ You need the following software installed to run the project:
 
 ![screenshot1](./docs/screenshot-1.jpg)
 ![screenshot2](./docs/screenshot-2.jpg)
+
+## Contact
+
+If you have any questions or suggestions, feel free to reach out to me at my email address: <suxrobgm@gmail.com>
+My LinkedIn profile: [Sukhrob Ilyosbekov](https://www.linkedin.com/in/suxrobgm/)
