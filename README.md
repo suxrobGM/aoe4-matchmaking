@@ -145,5 +145,6 @@ You need the following software installed to run the project:
 
 ## Contact
 
-If you have any questions or suggestions, feel free to reach out to me at my email address: <suxrobgm@gmail.com>
+If you have any questions or suggestions, feel free to reach out to me at my email address: <suxrobgm@gmail.com> or via LinkedIn.
+
 My LinkedIn profile: [Sukhrob Ilyosbekov](https://www.linkedin.com/in/suxrobgm/)
