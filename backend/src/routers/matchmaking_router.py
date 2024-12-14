@@ -43,7 +43,7 @@ def predict_match_outcome(payload: PredictMatchOutcomeDto) -> ResultWithData[flo
 def find_match(payload: PlayerIdDto) -> ResultWithData[PairPlayersDto]:
     """
     Pair a player with an opponent and form a match. 
-    Return the opponent's ID.
+    Return the opponent's data.
     """
     match_data = matchmaker.find_match_for_player(payload.player_id)
     
